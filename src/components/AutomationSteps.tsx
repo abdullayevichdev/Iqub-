@@ -49,7 +49,7 @@ export default function AutomationSteps() {
         stiffness: 100,
       },
     },
-  };
+  } as const;
 
   return (
     <section id="steps" className="py-24 bg-white overflow-hidden">

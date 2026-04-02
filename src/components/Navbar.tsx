@@ -78,25 +78,32 @@ export default function Navbar({ onViewChange, currentView, onLoginClick }: Navb
           </div>
 
           {/* Language Selector - Right */}
-          <div className="hidden md:flex items-center space-x-10 w-[320px] justify-end">
+          <div className="hidden md:flex items-center space-x-8 w-[400px] justify-end">
             {languages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => setLanguage(lang.code)}
-                className="flex items-center gap-3 group"
+                className="flex items-center gap-2 group"
               >
-                <div className={`w-8 h-8 rounded-full overflow-hidden shadow-sm border-2 transition-all ${
+                <div className={`w-6 h-6 rounded-full overflow-hidden shadow-sm border-2 transition-all ${
                   language === lang.code ? 'border-[#F27D26] scale-110' : 'border-transparent'
                 }`}>
                   <img src={lang.flag} alt={lang.name} className="w-full h-full object-cover" />
                 </div>
-                <span className={`text-[16px] font-semibold transition-colors ${
+                <span className={`text-[14px] font-semibold transition-colors ${
                   language === lang.code ? 'text-[#F27D26]' : 'text-[#94A3B8] group-hover:text-[#F27D26]'
                 }`}>
                   {lang.name}
                 </span>
               </button>
             ))}
+            
+            <button 
+              onClick={onLoginClick}
+              className="px-6 py-2.5 bg-[#141414] text-white rounded-xl text-[14px] font-bold hover:bg-[#F29900] transition-all shadow-lg shadow-black/5"
+            >
+              Admin
+            </button>
           </div>
 
           {/* Mobile Menu Button */}

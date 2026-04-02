@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Send } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
-export default function Footer() {
+export default function Footer({ onAdminClick }: { onAdminClick?: () => void }) {
   const { t } = useLanguage();
   const containerVariants = {
     hidden: { opacity: 0 },

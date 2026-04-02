@@ -20,7 +20,7 @@ export default function FAQ() {
         staggerChildren: 0.05,
       },
     },
-  };
+  } as const;
 
   const wordVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -33,7 +33,7 @@ export default function FAQ() {
         stiffness: 100,
       },
     },
-  };
+  } as const;
 
   useEffect(() => {
     const fetchFaqs = async () => {

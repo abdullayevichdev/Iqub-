@@ -43,7 +43,7 @@ export default function Features() {
         staggerChildren: 0.03,
       },
     },
-  };
+  } as const;
 
   const wordVariants = {
     hidden: { opacity: 0, y: 10 },
@@ -56,7 +56,7 @@ export default function Features() {
         stiffness: 100,
       },
     },
-  };
+  } as const;
 
   return (
     <section id="features" className="py-24 bg-white overflow-hidden">

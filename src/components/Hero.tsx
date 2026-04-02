@@ -1,10 +1,16 @@
+import { useState } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { GetDemoModal } from './Modals';
 
-interface HeroProps {}
+interface HeroProps {
+  onDemoSuccess?: (name: string) => void;
+  isDemoModalOpen: boolean;
+  setIsDemoModalOpen: (isOpen: boolean) => void;
+}
 
-export default function Hero({}: HeroProps) {
+export default function Hero({ onDemoSuccess, isDemoModalOpen, setIsDemoModalOpen }: HeroProps) {
   const { t } = useLanguage();
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 100]);
@@ -21,7 +27,7 @@ export default function Hero({}: HeroProps) {
         delayChildren: 0.2,
       },
     },
-  };
+  } as const;
 
   const wordVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -34,7 +40,7 @@ export default function Hero({}: HeroProps) {
         stiffness: 100,
       },
     },
-  };
+  } as const;
 
   return (
     <section id="home" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden hero-gradient">
@@ -118,6 +124,20 @@ export default function Hero({}: HeroProps) {
           </motion.p>
           
           <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="mb-16"
+          >
+            <button 
+              onClick={() => setIsDemoModalOpen(true)}
+              className="bg-[#F29900] text-white px-32 py-4 rounded-2xl text-xl font-bold shadow-md hover:scale-105 transition-all active:scale-95"
+            >
+              Get demo
+            </button>
+          </motion.div>
+          
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1, type: "spring" }}
@@ -159,6 +179,11 @@ export default function Hero({}: HeroProps) {
           </motion.div>
         </div>
       </div>
+      <GetDemoModal 
+        isOpen={isDemoModalOpen} 
+        onClose={() => setIsDemoModalOpen(false)} 
+        onDemoSuccess={onDemoSuccess}
+      />
     </section>
   );
 }

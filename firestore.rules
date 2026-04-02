@@ -1,0 +1,110 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: demo_requests
+    // Fields: name, company, contact, status, createdAt
+    //
+    // Collection: users
+    // Fields: name, email, role, createdAt
+    //
+    // Collection: reports
+    // Fields: name, type, size, date
+    //
+    // Collection: clients
+    // Fields: name, phone, email, address, status, color, createdAt
+    //
+    // Collection: staff
+    // Fields: name, role, phone, email, performance, color, createdAt
+    //
+    // Collection: payments
+    // Fields: name, type, amount, date, status, color
+    //
+    // Collection: leads
+    // Fields: name, company, status, value, source, createdAt
+    //
+    // Collection: inventory
+    // Fields: name, category, stock, price, status, createdAt
+    //
+    // Collection: objects
+    // Fields: name, progress, units, status, createdAt
+    //
+    // Collection: warehouses
+    // Fields: name, capacity, used, status, createdAt
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "abdulxayavazxanov2012@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Demo Requests
+    match /demo_requests/{requestId} {
+      allow read, write: if true; // Allow anyone to read and write for demo purposes
+    }
+
+    // Users
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isAdmin() || isOwner(userId);
+    }
+
+    // System Settings
+    match /system_settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Security Settings
+    match /security_settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // System Reports
+    match /system_reports/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Common collections for the ERP system
+    match /clients/{id} { allow read, write: if true; }
+    match /notifications/{id} { allow read, write: if true; }
+    match /payments/{id} { allow read, write: if true; }
+    match /staff/{id} { allow read, write: if true; }
+    match /documents/{id} { allow read, write: if true; }
+    match /leads/{id} { allow read, write: if true; }
+    match /warehouses/{id} { allow read, write: if true; }
+    match /reports/{id} { allow read, write: if true; }
+    match /inventory/{id} { allow read, write: if true; }
+    match /sales/{id} { allow read, write: if true; }
+    match /objects/{id} { allow read, write: if true; }
+
+    // Connection Test
+    match /test/{document=**} {
+      allow read: if true;
+    }
+  }
+}

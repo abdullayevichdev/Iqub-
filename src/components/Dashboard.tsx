@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   LayoutDashboard, 
   Building2, 
@@ -28,6 +28,13 @@ export default function Dashboard() {
   const { t } = useLanguage();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const notifications = [
+    { id: 1, title: 'Yangi lid', message: 'Sizga yangi lid biriktirildi', time: '2 daqiqa oldin' },
+    { id: 2, title: 'To\'lov tasdiqlandi', message: 'Farg\'ona City loyihasi bo\'yicha to\'lov', time: '1 soat oldin' },
+  ];
 
   const menuItems = [
     { name: t('dash.home'), icon: LayoutDashboard, active: true },
@@ -106,13 +113,48 @@ export default function Dashboard() {
               <input 
                 type="text" 
                 placeholder={t('dash.search')} 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-iqub-orange-start focus:border-transparent outline-none w-64"
               />
+              {searchQuery && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Natijalar</p>
+                  <div className="p-2 hover:bg-slate-50 rounded-lg cursor-pointer">
+                    <p className="text-sm font-bold text-slate-900">"{searchQuery}" bo'yicha qidiruv...</p>
+                  </div>
+                </div>
+              )}
             </div>
-            <button className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors relative">
-              <Bell size={18} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors relative"
+              >
+                <Bell size={18} />
+                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              </button>
+              <AnimatePresence>
+                {showNotifications && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute top-full right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                  >
+                    <div className="p-4 border-b border-slate-50 font-bold text-slate-900">Bildirishnomalar</div>
+                    <div className="max-h-64 overflow-y-auto">
+                      {notifications.map(n => (
+                        <div key={n.id} className="p-4 hover:bg-slate-50 border-b border-slate-50 last:border-0 cursor-pointer">
+                          <p className="text-sm font-bold text-slate-900">{n.title}</p>
+                          <p className="text-xs text-slate-500">{n.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold">
               <User size={20} />
             </div>

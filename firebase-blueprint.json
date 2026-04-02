@@ -1,0 +1,246 @@
+{
+  "entities": {
+    "DemoRequest": {
+      "title": "Demo Request",
+      "description": "A request from a user to access the demo dashboard.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Full name of the requester" },
+        "company": { "type": "string", "description": "Company name" },
+        "contact": { "type": "string", "description": "Contact phone or email" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Current status of the request" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the request was made" }
+      },
+      "required": ["name", "contact", "status", "createdAt"]
+    },
+    "InventoryItem": {
+      "title": "Inventory Item",
+      "description": "An item in the warehouse inventory.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "quantity": { "type": "number" },
+        "unit": { "type": "string" },
+        "price": { "type": "number" },
+        "status": { "type": "string" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "quantity", "unit"]
+    },
+    "Sale": {
+      "title": "Sale",
+      "description": "A record of a sale transaction.",
+      "type": "object",
+      "properties": {
+        "client": { "type": "string" },
+        "object": { "type": "string" },
+        "amount": { "type": "string" },
+        "status": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["client", "object", "amount", "status"]
+    },
+    "ConstructionObject": {
+      "title": "Construction Object",
+      "description": "A building or project under construction.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "apartments": { "type": "number" },
+        "blocks": { "type": "number" },
+        "progress": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["name", "apartments", "blocks", "progress", "status"]
+    },
+    "User": {
+      "title": "User",
+      "description": "A user of the system.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "hasDemoAccess": { "type": "boolean" }
+      },
+      "required": ["email", "role", "hasDemoAccess"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "A customer or lead.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "location": { "type": "string" },
+        "status": { "type": "string", "enum": ["Faol", "Kutilmoqda", "Nofaol"] },
+        "project": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "status"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "A system notification for the user.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "time": { "type": "string", "format": "date-time" },
+        "read": { "type": "boolean" },
+        "type": { "type": "string", "enum": ["info", "success", "warning", "error"] }
+      },
+      "required": ["title", "message", "time", "read"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "A financial transaction.",
+      "type": "object",
+      "properties": {
+        "client": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["Muvaffaqiyatli", "Kutilmoqda", "Bekor qilindi"] },
+        "date": { "type": "string", "format": "date-time" },
+        "method": { "type": "string" }
+      },
+      "required": ["client", "amount", "status", "date"]
+    },
+    "Staff": {
+      "title": "Staff",
+      "description": "An employee or staff member.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" },
+        "phone": { "type": "string" },
+        "performance": { "type": "number" },
+        "status": { "type": "string", "enum": ["Faol", "Ta'tilda", "Nofaol"] }
+      },
+      "required": ["name", "role", "status"]
+    },
+    "Document": {
+      "title": "Document",
+      "description": "An electronic document (Didox).",
+      "type": "object",
+      "properties": {
+        "number": { "type": "string" },
+        "type": { "type": "string" },
+        "partner": { "type": "string" },
+        "amount": { "type": "number" },
+        "status": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" }
+      },
+      "required": ["number", "type", "partner", "status"]
+    },
+    "Warehouse": {
+      "title": "Warehouse",
+      "description": "A storage facility.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "code": { "type": "string" },
+        "status": { "type": "string", "enum": ["Faol", "Nofaol"] },
+        "usage": { "type": "number" }
+      },
+      "required": ["name", "code", "status"]
+    },
+    "SystemSettings": {
+      "title": "System Settings",
+      "description": "Global system configuration.",
+      "type": "object",
+      "properties": {
+        "siteName": { "type": "string" },
+        "maintenanceMode": { "type": "boolean" },
+        "emailNotifications": { "type": "boolean" },
+        "smsNotifications": { "type": "boolean" },
+        "language": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "SecuritySettings": {
+      "title": "Security Settings",
+      "description": "Global security configuration.",
+      "type": "object",
+      "properties": {
+        "twoFactor": { "type": "boolean" },
+        "ipRestrictions": { "type": "boolean" },
+        "autoBlock": { "type": "boolean" },
+        "sessionTimeout": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "SystemReport": {
+      "title": "System Report",
+      "description": "A report generated by the system or admin.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "type": { "type": "string" },
+        "author": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/demo_requests/{requestId}": {
+      "schema": "DemoRequest",
+      "description": "Collection of demo requests"
+    },
+    "/inventory/{itemId}": {
+      "schema": "InventoryItem",
+      "description": "Collection of inventory items"
+    },
+    "/sales/{saleId}": {
+      "schema": "Sale",
+      "description": "Collection of sales records"
+    },
+    "/objects/{objectId}": {
+      "schema": "ConstructionObject",
+      "description": "Collection of construction objects"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user profiles and permissions"
+    },
+    "/clients/{clientId}": {
+      "schema": "Client",
+      "description": "Collection of clients"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Collection of notifications"
+    },
+    "/payments/{paymentId}": {
+      "schema": "Payment",
+      "description": "Collection of payments"
+    },
+    "/staff/{staffId}": {
+      "schema": "Staff",
+      "description": "Collection of staff members"
+    },
+    "/documents/{documentId}": {
+      "schema": "Document",
+      "description": "Collection of documents"
+    },
+    "/warehouses/{warehouseId}": {
+      "schema": "Warehouse",
+      "description": "Collection of warehouses"
+    },
+    "/system_settings/{id}": {
+      "schema": "SystemSettings",
+      "description": "Global system settings"
+    },
+    "/security_settings/{id}": {
+      "schema": "SecuritySettings",
+      "description": "Global security settings"
+    },
+    "/system_reports/{id}": {
+      "schema": "SystemReport",
+      "description": "Collection of system reports"
+    }
+  }
+}
