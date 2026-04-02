@@ -98,15 +98,15 @@ export default function AutomationSteps() {
                 scale: 1.02,
                 transition: { type: "spring", stiffness: 400, damping: 10 }
               }}
-              className="relative z-10 flex flex-col items-center text-center p-10 rounded-[3rem] bg-slate-50 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 group"
+              className="relative z-10 flex flex-col items-center text-center p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] bg-slate-50 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 group"
             >
-              <div className="relative mb-12">
+              <div className="relative mb-8 md:mb-12">
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 10 }}
                   transition={{ type: "spring", stiffness: 300 }}
-                  className="w-24 h-24 gradient-bg rounded-3xl flex items-center justify-center shadow-2xl shadow-orange-500/20 text-white group-hover:shadow-orange-500/40 transition-all"
+                  className="w-20 h-20 md:w-24 md:h-24 gradient-bg rounded-3xl flex items-center justify-center shadow-2xl shadow-orange-500/20 text-white group-hover:shadow-orange-500/40 transition-all"
                 >
-                  <step.icon size={44} />
+                  <step.icon size={36} className="md:w-11 md:h-11" />
                 </motion.div>
                 <motion.div 
                   initial={{ scale: 0 }}

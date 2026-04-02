@@ -92,29 +92,29 @@ export default function Features() {
           </motion.p>
         </div>
 
-        <div className="space-y-32">
+        <div className="space-y-16 md:space-y-32">
           {modules.map((module, index) => (
             <div 
               key={module.title}
-              className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12 lg:gap-24`}
+              className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-8 lg:gap-24`}
             >
               <motion.div 
                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                className="flex-1"
+                className="flex-1 text-center lg:text-left"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 gradient-bg rounded-2xl text-white shadow-lg shadow-orange-500/20 mb-8">
-                  <module.icon size={32} />
+                <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 gradient-bg rounded-2xl text-white shadow-lg shadow-orange-500/20 mb-6 md:mb-8">
+                  <module.icon size={24} className="md:w-8 md:h-8" />
                 </div>
-                <h3 className="text-3xl font-bold text-slate-900 mb-6">{module.title}</h3>
-                <p className="text-lg text-slate-600 leading-relaxed font-medium mb-8">
+                <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4 md:mb-6">{module.title}</h3>
+                <p className="text-base md:text-lg text-slate-600 leading-relaxed font-medium mb-6 md:mb-8">
                   {module.description}
                 </p>
                 <motion.button
                   whileHover={{ x: 10 }}
-                  className="flex items-center gap-2 text-iqub-orange-end font-bold text-lg"
+                  className="flex items-center justify-center lg:justify-start gap-2 text-iqub-orange-end font-bold text-lg mx-auto lg:mx-0"
                 >
                   {t('features.more')} <span className="text-2xl">→</span>
                 </motion.button>
@@ -128,8 +128,8 @@ export default function Features() {
                 className="flex-1 w-full"
               >
                 <div className="relative group">
-                  <div className="absolute -inset-4 gradient-bg opacity-10 blur-2xl rounded-[3rem] group-hover:opacity-20 transition-opacity" />
-                  <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200 border-8 border-white bg-white">
+                  <div className="absolute -inset-4 gradient-bg opacity-10 blur-2xl rounded-[2rem] md:rounded-[3rem] group-hover:opacity-20 transition-opacity" />
+                  <div className="relative rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl shadow-slate-200 border-4 md:border-8 border-white bg-white">
                     <img 
                       src={module.image} 
                       alt={module.title}

@@ -7,17 +7,19 @@ import ErrorBoundary from './components/ErrorBoundary.tsx';
 
 // Ignore Vite's WebSocket errors which are expected in this environment
 window.addEventListener('unhandledrejection', (event) => {
-  if (event.reason && (
-    (typeof event.reason === 'string' && event.reason.includes('WebSocket')) ||
-    (event.reason.message && event.reason.message.includes('WebSocket'))
-  )) {
+  const reason = event.reason;
+  const message = (typeof reason === 'string' ? reason : reason?.message) || '';
+  if (message.toLowerCase().includes('websocket')) {
     event.preventDefault();
+    event.stopPropagation();
   }
 });
 
 window.addEventListener('error', (event) => {
-  if (event.message && event.message.includes('WebSocket')) {
+  const message = event.message || '';
+  if (message.toLowerCase().includes('websocket')) {
     event.preventDefault();
+    event.stopPropagation();
   }
 });
 

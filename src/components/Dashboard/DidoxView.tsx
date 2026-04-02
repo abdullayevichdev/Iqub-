@@ -17,6 +17,9 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 export default function DidoxView() {
   const [documents, setDocuments] = useState<any[]>([]);
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('Barchasi');
+
   useEffect(() => {
     const q = query(collection(db, 'documents'), orderBy('date', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -29,6 +32,13 @@ export default function DidoxView() {
 
     return () => unsubscribe();
   }, []);
+
+  const filteredDocuments = documents.filter(doc => {
+    const matchesSearch = doc.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         doc.partner?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterStatus === 'Barchasi' || doc.status === filterStatus;
+    return matchesSearch && matchesFilter;
+  });
 
   const stats = {
     total: documents.length,
@@ -88,12 +98,27 @@ export default function DidoxView() {
               <input 
                 type="text" 
                 placeholder="Qidirish..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-sm focus:ring-2 focus:ring-orange-500/20 outline-none w-48 transition-all"
               />
             </div>
-            <button className="p-2 text-slate-400 hover:text-slate-900 transition-all">
-              <Filter size={20} />
-            </button>
+            <div className="relative group">
+              <button className="p-2 text-slate-400 hover:text-slate-900 transition-all">
+                <Filter size={20} />
+              </button>
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                {['Barchasi', 'Imzolandi', 'Kutilmoqda', 'Rad etildi'].map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => setFilterStatus(status)}
+                    className={`w-full text-left px-4 py-2 text-sm font-medium hover:bg-slate-50 transition-colors ${filterStatus === status ? 'text-orange-600 bg-orange-50' : 'text-slate-600'}`}
+                  >
+                    {status}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -108,8 +133,8 @@ export default function DidoxView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {documents.length > 0 ? (
-                documents.map((doc) => (
+              {filteredDocuments.length > 0 ? (
+                filteredDocuments.map((doc) => (
                   <tr key={doc.id} className="hover:bg-slate-50 transition-all group">
                     <td className="p-6">
                       <div className="flex items-center gap-3">

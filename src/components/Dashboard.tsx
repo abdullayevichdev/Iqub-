@@ -30,6 +30,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const notifications = [
     { id: 1, title: 'Yangi lid', message: 'Sizga yangi lid biriktirildi', time: '2 daqiqa oldin' },
@@ -68,7 +69,48 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex pt-20">
-      {/* Sidebar */}
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] lg:hidden"
+            />
+            <motion.aside
+              initial={{ x: -280 }}
+              animate={{ x: 0 }}
+              exit={{ x: -280 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-[70] shadow-2xl lg:hidden"
+            >
+              <div className="p-6 pt-24">
+                <nav className="space-y-2">
+                  {menuItems.map((item, i) => (
+                    <button
+                      key={item.name}
+                      onClick={() => setIsSidebarOpen(false)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
+                        item.active 
+                          ? 'gradient-bg text-white shadow-lg shadow-orange-500/20' 
+                          : 'text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      <item.icon size={18} />
+                      {item.name}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 hidden lg:block">
         <div className="p-6">
           <nav className="space-y-2">
@@ -95,27 +137,35 @@ export default function Dashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 lg:p-10">
+      <main className="flex-1 p-4 md:p-6 lg:p-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-              <span>{t('dash.home')}</span>
-              <ChevronRight size={12} />
-              <span className="text-slate-900">{t('dash.inventory')}</span>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-600"
+            >
+              <MoreVertical size={20} className="rotate-90" />
+            </button>
+            <div>
+              <div className="flex items-center gap-2 text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 md:mb-2">
+                <span>{t('dash.home')}</span>
+                <ChevronRight size={12} />
+                <span className="text-slate-900">{t('dash.inventory')}</span>
+              </div>
+              <h2 className="text-lg md:text-xl font-bold text-slate-900">{t('dash.inventory')}</h2>
             </div>
-            <h2 className="text-xl font-bold text-slate-900">{t('dash.inventory')}</h2>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div className="relative flex-1 sm:flex-none">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input 
                 type="text" 
                 placeholder={t('dash.search')} 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-iqub-orange-start focus:border-transparent outline-none w-64"
+                className="w-full sm:w-64 pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-iqub-orange-start focus:border-transparent outline-none"
               />
               {searchQuery && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50">

@@ -127,11 +127,11 @@ export default function Hero({ onDemoSuccess, isDemoModalOpen, setIsDemoModalOpe
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="mb-16"
+            className="mb-16 px-4"
           >
             <button 
               onClick={() => setIsDemoModalOpen(true)}
-              className="bg-[#F29900] text-white px-32 py-4 rounded-2xl text-xl font-bold shadow-md hover:scale-105 transition-all active:scale-95"
+              className="w-full sm:w-auto bg-[#F29900] text-white px-8 sm:px-32 py-4 rounded-2xl text-xl font-bold shadow-md hover:scale-105 transition-all active:scale-95"
             >
               Get demo
             </button>

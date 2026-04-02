@@ -353,10 +353,10 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative z-[101] w-full max-w-5xl bg-white rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]"
+            className="relative z-[101] w-full max-w-5xl bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:min-h-[600px]"
           >
             {/* Left Side: Image */}
-            <div className="w-full md:w-1/2 relative overflow-hidden bg-slate-900">
+            <div className="w-full md:w-1/2 relative overflow-hidden bg-slate-900 h-[200px] md:h-auto flex-shrink-0">
               <img 
                 src="https://iqub.uz/_next/image?url=%2Fimages%2Fimage.webp&w=1920&q=75" 
                 alt="Building Complex" 
@@ -367,51 +367,51 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
               
               <button 
                 onClick={handleBack}
-                className="absolute top-8 left-8 z-20 bg-black/40 hover:bg-black/60 text-white text-xs py-2 px-4 rounded-xl backdrop-blur-md flex items-center gap-2 transition-all border border-white/10"
+                className="absolute top-4 left-4 md:top-8 md:left-8 z-20 bg-black/40 hover:bg-black/60 text-white text-[10px] md:text-xs py-1.5 px-3 md:py-2 md:px-4 rounded-xl backdrop-blur-md flex items-center gap-2 transition-all border border-white/10"
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft size={14} className="md:w-4 md:h-4" />
                 Ortga qaytish
               </button>
 
               <motion.div 
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[280px] bg-white rounded-[2rem] shadow-2xl p-8 border border-slate-100"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-[240px] md:w-[280px] bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl p-4 md:p-8 border border-slate-100 hidden sm:block"
               >
-                <h4 className="text-[#F29900] font-black text-xl mb-4 italic flex items-center gap-2">
-                  <Building size={20} />
+                <h4 className="text-[#F29900] font-black text-lg md:text-xl mb-2 md:mb-4 italic flex items-center gap-2">
+                  <Building size={18} className="md:w-5 md:h-5" />
                   И Блок
                 </h4>
-                <div className="space-y-3">
-                  <div className="flex justify-between text-[11px] font-bold">
+                <div className="space-y-2 md:space-y-3">
+                  <div className="flex justify-between text-[10px] md:text-[11px] font-bold">
                     <span className="text-slate-400 uppercase tracking-wider">Sotuvda:</span>
                     <span className="text-slate-900">45 ta</span>
                   </div>
-                  <div className="flex justify-between text-[11px] font-bold">
+                  <div className="flex justify-between text-[10px] md:text-[11px] font-bold">
                     <span className="text-slate-400 uppercase tracking-wider">Sotilgan:</span>
                     <span className="text-slate-900">0 ta</span>
                   </div>
-                  <div className="flex justify-between text-[11px] font-bold">
+                  <div className="flex justify-between text-[10px] md:text-[11px] font-bold">
                     <span className="text-slate-400 uppercase tracking-wider">Maydon:</span>
                     <span className="text-slate-900">42.9 - 72.5 m²</span>
                   </div>
-                  <div className="pt-3 border-t border-slate-50">
+                  <div className="pt-2 md:pt-3 border-t border-slate-50">
                     <div className="flex justify-between items-center">
-                      <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Narx:</span>
+                      <span className="text-slate-400 text-[10px] md:text-[11px] font-bold uppercase tracking-wider">Narx:</span>
                       <span className="text-[#F29900] font-black">300 mln+</span>
                     </div>
                   </div>
                 </div>
               </motion.div>
 
-              <div className="absolute bottom-8 left-8 right-8">
-                <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-1">iQUB Ecosystem</p>
-                <h4 className="text-white text-lg font-black italic">Professional boshqaruv tizimi</h4>
+              <div className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-8">
+                <p className="text-white/60 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.3em] mb-1">iQUB Ecosystem</p>
+                <h4 className="text-white text-sm md:text-lg font-black italic">Professional boshqaruv tizimi</h4>
               </div>
             </div>
 
             {/* Right Side: Flow */}
-            <div className="w-full md:w-1/2 p-12 flex flex-col justify-center bg-white">
+            <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-center bg-white overflow-y-auto">
               <AnimatePresence mode="wait">
                 {step === 'form' && (
                   <motion.div
@@ -419,11 +419,11 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="space-y-8"
+                    className="space-y-6 md:space-y-8"
                   >
                     <div>
-                      <h3 className="text-4xl font-black text-slate-900 mb-2">Demo olish</h3>
-                      <p className="text-slate-500 font-medium">Tizim imkoniyatlarini bepul sinab ko'ring</p>
+                      <h3 className="text-2xl md:text-4xl font-black text-slate-900 mb-1 md:mb-2">Demo olish</h3>
+                      <p className="text-sm md:text-base text-slate-500 font-medium">Tizim imkoniyatlarini bepul sinab ko'ring</p>
                     </div>
 
                     <form 
@@ -431,7 +431,7 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
                         console.log("Form onSubmit triggered!");
                         handleSubmit(e);
                       }} 
-                      className="space-y-5"
+                      className="space-y-4 md:space-y-5"
                     >
                       <div className="space-y-1.5">
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Ismingiz</label>
@@ -442,7 +442,7 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
                             placeholder="Ismingizni kiriting"
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-orange-500/20 outline-none transition-all font-medium"
+                            className="w-full pl-12 pr-4 py-3 md:py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-orange-500/20 outline-none transition-all font-medium"
                             required
                           />
                         </div>
@@ -456,7 +456,7 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
                             placeholder="Kompaniya nomi"
                             value={formData.company}
                             onChange={(e) => setFormData({...formData, company: e.target.value})}
-                            className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-orange-500/20 outline-none transition-all font-medium"
+                            className="w-full pl-12 pr-4 py-3 md:py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-orange-500/20 outline-none transition-all font-medium"
                             required
                           />
                         </div>
@@ -470,7 +470,7 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
                             placeholder="+998 90 123 45 67"
                             value={formData.contact}
                             onChange={(e) => setFormData({...formData, contact: e.target.value})}
-                            className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-orange-500/20 outline-none transition-all font-medium"
+                            className="w-full pl-12 pr-4 py-3 md:py-4 bg-slate-50 border border-slate-100 rounded-2xl text-sm focus:ring-2 focus:ring-orange-500/20 outline-none transition-all font-medium"
                             required
                           />
                         </div>
@@ -479,7 +479,7 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
                         type="submit"
                         disabled={loading}
                         onClick={() => console.log("Button clicked!")}
-                        className="w-full gradient-bg text-white py-5 rounded-2xl font-black shadow-xl shadow-orange-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full gradient-bg text-white py-4 md:py-5 rounded-2xl font-black shadow-xl shadow-orange-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mt-2 md:mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {loading ? (
                           <Loader2 className="animate-spin" size={20} />

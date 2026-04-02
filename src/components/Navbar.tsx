@@ -43,17 +43,17 @@ export default function Navbar({ onViewChange, currentView, onLoginClick }: Navb
         scrolled || currentView === 'dashboard' ? 'bg-white shadow-sm py-4' : 'bg-white py-6'
       }`}
     >
-      <div className="max-w-[1440px] mx-auto px-8 md:px-16">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-16">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="flex-shrink-0 w-[120px]">
+          <div className="flex-shrink-0 w-[100px] md:w-[120px]">
             <motion.button 
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               onClick={() => onViewChange('landing')} 
               className="flex items-center"
             >
-              <span className="text-[32px] font-[900] tracking-[-0.05em] text-[#141414] leading-none">
+              <span className="text-[24px] md:text-[32px] font-[900] tracking-[-0.05em] text-[#141414] leading-none">
                 i<span className="tracking-[-0.02em]">QUB</span>
               </span>
             </motion.button>

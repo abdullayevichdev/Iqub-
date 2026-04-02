@@ -49,7 +49,7 @@ export default function WhyIQUB() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight"
+            className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight"
           >
             {headingText}
           </motion.h2>
@@ -58,13 +58,13 @@ export default function WhyIQUB() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-slate-600 leading-relaxed font-medium"
+            className="text-base md:text-lg text-slate-600 leading-relaxed font-medium"
           >
             {subText}
           </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {advantages.map((item, index) => (
             <motion.div
               key={item.title}
@@ -73,7 +73,7 @@ export default function WhyIQUB() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -5 }}
-              className="bg-white p-10 rounded-[2.5rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-slate-100 flex flex-col items-start text-left"
+              className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-slate-100 flex flex-col items-start text-left"
             >
               <div className="w-12 h-12 bg-orange-100/50 rounded-xl flex items-center justify-center mb-8 text-orange-500">
                 <item.icon size={24} />

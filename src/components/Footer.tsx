@@ -139,12 +139,12 @@ export default function Footer({ onAdminClick }: { onAdminClick?: () => void }) 
 
         <motion.div 
           variants={itemVariants}
-          className="pt-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6"
+          className="pt-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left"
         >
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-sm order-2 md:order-1">
             © {new Date().getFullYear()} iQUB ERP. {t('footer.rights')}
           </p>
-          <div className="flex gap-8 text-sm text-slate-500">
+          <div className="flex gap-8 text-sm text-slate-500 order-1 md:order-2">
             <a href="#" className="hover:text-white transition-colors">{t('footer.privacy')}</a>
             <a href="#" className="hover:text-white transition-colors">{t('footer.terms')}</a>
           </div>
