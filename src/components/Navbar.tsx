@@ -5,12 +5,14 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
-  onViewChange: (view: 'landing' | 'dashboard') => void;
-  currentView: 'landing' | 'dashboard';
+  onViewChange: (view: 'landing' | 'dashboard' | 'demo') => void;
+  currentView: 'landing' | 'dashboard' | 'demo';
   onLoginClick: () => void;
+  isAdmin?: boolean;
+  isDemoApproved?: boolean;
 }
 
-export default function Navbar({ onViewChange, currentView, onLoginClick }: NavbarProps) {
+export default function Navbar({ onViewChange, currentView, onLoginClick, isAdmin, isDemoApproved }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { user, logout, isAuthenticated } = useAuth();
@@ -37,10 +39,13 @@ export default function Navbar({ onViewChange, currentView, onLoginClick }: Navb
     { code: 'en' as const, name: 'Eng', flag: 'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg' },
   ];
 
+  const showDashboardButton = isAdmin || isDemoApproved;
+  const dashboardView = isAdmin ? 'dashboard' : 'demo';
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled || currentView === 'dashboard' ? 'bg-white shadow-sm py-4' : 'bg-white py-6'
+        scrolled || currentView !== 'landing' ? 'bg-white shadow-sm py-4' : 'bg-white py-6'
       }`}
     >
       <div className="max-w-[1440px] mx-auto px-4 md:px-16">
@@ -98,12 +103,22 @@ export default function Navbar({ onViewChange, currentView, onLoginClick }: Navb
               </button>
             ))}
             
-            <button 
-              onClick={onLoginClick}
-              className="px-6 py-2.5 bg-[#141414] text-white rounded-xl text-[14px] font-bold hover:bg-[#F29900] transition-all shadow-lg shadow-black/5"
-            >
-              Admin
-            </button>
+            {showDashboardButton ? (
+              <button 
+                onClick={() => onViewChange(currentView === 'landing' ? dashboardView : 'landing')}
+                className="px-6 py-2.5 bg-[#F27D26] text-white rounded-xl text-[14px] font-bold hover:bg-[#F29900] transition-all shadow-lg shadow-orange-500/20 flex items-center gap-2"
+              >
+                <Layout size={16} />
+                {currentView === 'landing' ? t('nav.dashboard') : t('nav.landing')}
+              </button>
+            ) : (
+              <button 
+                onClick={onLoginClick}
+                className="px-6 py-2.5 bg-[#141414] text-white rounded-xl text-[14px] font-bold hover:bg-[#F29900] transition-all shadow-lg shadow-black/5"
+              >
+                Admin
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -160,18 +175,20 @@ export default function Navbar({ onViewChange, currentView, onLoginClick }: Navb
                   ))}
                 </div>
 
-                <button 
-                  onClick={() => {
-                    onViewChange(currentView === 'landing' ? 'dashboard' : 'landing');
-                    setIsOpen(false);
-                  }}
-                  className="w-full flex items-center justify-center gap-2 py-3 text-slate-700 font-bold border border-slate-200 rounded-xl"
-                >
-                  <Layout size={18} />
-                  {currentView === 'landing' ? t('nav.dashboard') : t('nav.landing')}
-                </button>
+                {showDashboardButton && (
+                  <button 
+                    onClick={() => {
+                      onViewChange(currentView === 'landing' ? dashboardView : 'landing');
+                      setIsOpen(false);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 text-slate-700 font-bold border border-slate-200 rounded-xl"
+                  >
+                    <Layout size={18} />
+                    {currentView === 'landing' ? t('nav.dashboard') : t('nav.landing')}
+                  </button>
+                )}
 
-                {!isAuthenticated && (
+                {!isAuthenticated && !showDashboardButton && (
                   <button 
                     onClick={() => { onLoginClick(); setIsOpen(false); }}
                     className="w-full py-3 text-center font-bold text-slate-700 border border-slate-200 rounded-xl"

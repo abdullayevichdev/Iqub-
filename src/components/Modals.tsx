@@ -11,7 +11,7 @@ interface ModalProps {
   onClose: () => void;
 }
 
-export function LoginModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { onDemoSuccess?: (name: string) => void }) {
+export function LoginModal({ isOpen, onClose, onAdminLogin }: ModalProps & { onAdminLogin?: () => void }) {
   const { t } = useLanguage();
   const { login } = useAuth();
   const [email, setEmail] = useState('admin@iqub.uz');
@@ -27,7 +27,7 @@ export function LoginModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { on
     if (password === '2000') {
       // Set a local storage flag for admin access
       localStorage.setItem('admin_access', 'true');
-      onDemoSuccess?.('Admin');
+      onAdminLogin?.();
       onClose();
       setLoading(false);
       return;
@@ -353,10 +353,10 @@ export function GetDemoModal({ isOpen, onClose, onDemoSuccess }: ModalProps & { 
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative z-[101] w-full max-w-5xl bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:min-h-[600px]"
+            className="relative z-[101] w-full max-w-5xl bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[95vh] md:min-h-[600px] overflow-y-auto md:overflow-visible"
           >
             {/* Left Side: Image */}
-            <div className="w-full md:w-1/2 relative overflow-hidden bg-slate-900 h-[200px] md:h-auto flex-shrink-0">
+            <div className="w-full md:w-1/2 relative overflow-hidden bg-slate-900 h-[180px] md:h-auto flex-shrink-0">
               <img 
                 src="https://iqub.uz/_next/image?url=%2Fimages%2Fimage.webp&w=1920&q=75" 
                 alt="Building Complex" 

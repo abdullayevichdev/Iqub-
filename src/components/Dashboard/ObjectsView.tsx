@@ -12,79 +12,126 @@ import {
   Search,
   Filter,
   Trash2,
-  X
+  X,
+  Edit3
 } from 'lucide-react';
 import { db } from '../../firebase';
-import { collection, onSnapshot, query, orderBy, deleteDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, deleteDoc, doc, addDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from '../../lib/firestore-utils';
 import { toast } from 'sonner';
 
-const ObjectCard = ({ id, name, location, progress, image, status, apartments, onDelete }: any) => (
-  <motion.div 
-    layout
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.9 }}
-    whileHover={{ y: -5 }}
-    className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300"
-  >
-    <div className="relative h-48">
-      <img src={image || `https://picsum.photos/seed/${name}/400/300`} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-      <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">
-        {status || 'Qurilmoqda'}
-      </div>
-    </div>
-    <div className="p-6">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-xl font-black text-slate-900 mb-1">{name}</h3>
-          <div className="flex items-center gap-1 text-slate-400">
-            <MapPin size={12} />
-            <span className="text-xs font-medium">{location || 'Manzil ko\'rsatilmagan'}</span>
-          </div>
-        </div>
-        <div className="flex gap-1">
-          <button 
-            onClick={onDelete}
-            className="p-2 text-slate-300 hover:text-red-500 transition-all"
-          >
-            <Trash2 size={18} />
-          </button>
-          <button className="p-2 text-slate-300 hover:text-slate-900 transition-all">
-            <MoreVertical size={18} />
-          </button>
-        </div>
-      </div>
+const ObjectCard = ({ id, name, location, progress, image, status, apartments, onDelete, onEdit }: any) => {
+  const [showMenu, setShowMenu] = useState(false);
 
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs font-bold">
-            <span className="text-slate-400">Qurilish jarayoni</span>
-            <span className="text-slate-900">{progress}%</span>
+  return (
+    <motion.div 
+      layout
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      whileHover={{ y: -5 }}
+      className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden hover:shadow-xl transition-all duration-300"
+    >
+      <div className="relative h-48">
+        <img src={image || `https://picsum.photos/seed/${name}/400/300`} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+        <div className="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-900 shadow-sm">
+          {status || 'Qurilmoqda'}
+        </div>
+      </div>
+      <div className="p-6">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h3 className="text-xl font-black text-slate-900 mb-1">{name}</h3>
+            <div className="flex items-center gap-1 text-slate-400">
+              <MapPin size={12} />
+              <span className="text-xs font-medium">{location || 'Manzil ko\'rsatilmagan'}</span>
+            </div>
           </div>
-          <div className="h-1.5 bg-slate-50 rounded-full overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              className="h-full bg-blue-500 rounded-full"
-            />
+          <div className="flex gap-1 relative">
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              className="p-2 text-slate-300 hover:text-red-500 transition-all"
+            >
+              <Trash2 size={18} />
+            </button>
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMenu(!showMenu);
+              }}
+              className="p-2 text-slate-300 hover:text-slate-900 transition-all"
+            >
+              <MoreVertical size={18} />
+            </button>
+
+            <AnimatePresence>
+              {showMenu && (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                    className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-20"
+                  >
+                    <button 
+                      onClick={() => {
+                        onEdit();
+                        setShowMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2"
+                    >
+                      <Edit3 size={16} /> Tahrirlash
+                    </button>
+                    <button 
+                      onClick={() => {
+                        onDelete();
+                        setShowMenu(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2"
+                    >
+                      <Trash2 size={16} /> O'chirish
+                    </button>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
-        <div className="flex justify-between items-center pt-4 border-t border-slate-50">
-          <div className="flex items-center gap-2">
-            <Building2 size={16} className="text-slate-400" />
-            <span className="text-xs font-bold text-slate-900">{apartments} xonadon</span>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between text-xs font-bold">
+              <span className="text-slate-400">Qurilish jarayoni</span>
+              <span className="text-slate-900">{progress}%</span>
+            </div>
+            <div className="h-1.5 bg-slate-50 rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                className="h-full bg-blue-500 rounded-full"
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-1 text-green-500">
-            <TrendingUp size={14} />
-            <span className="text-xs font-black">+{Math.floor(Math.random() * 20)}%</span>
+
+          <div className="flex justify-between items-center pt-4 border-t border-slate-50">
+            <div className="flex items-center gap-2">
+              <Building2 size={16} className="text-slate-400" />
+              <span className="text-xs font-bold text-slate-900">{apartments} xonadon</span>
+            </div>
+            <div className="flex items-center gap-1 text-green-500">
+              <TrendingUp size={14} />
+              <span className="text-xs font-black">+{Math.floor(Math.random() * 20)}%</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 export default function ObjectsView() {
   const [objects, setObjects] = useState<any[]>([]);
@@ -109,17 +156,17 @@ export default function ObjectsView() {
   }, []);
 
   const handleDeleteObject = async (id: string) => {
-    if (window.confirm("Ushbu obyektni o'chirib tashlamoqchimisiz?")) {
-      try {
-        await deleteDoc(doc(db, 'objects', id));
-        toast.success("Obyekt o'chirildi");
-      } catch (error) {
-        handleFirestoreError(error, OperationType.DELETE, `objects/${id}`);
-      }
+    try {
+      await deleteDoc(doc(db, 'objects', id));
+      toast.success("Obyekt o'chirildi");
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, `objects/${id}`);
     }
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [newObject, setNewObject] = useState({
     name: '',
     location: '',
@@ -128,6 +175,32 @@ export default function ObjectsView() {
     status: 'Qurilmoqda',
     image: ''
   });
+
+  const handleEditClick = (obj: any) => {
+    setEditingId(obj.id);
+    setNewObject({
+      name: obj.name || '',
+      location: obj.location || '',
+      apartments: obj.apartments?.toString() || '',
+      progress: obj.progress || 0,
+      status: obj.status || 'Qurilmoqda',
+      image: obj.image || ''
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleAddClick = () => {
+    setEditingId(null);
+    setNewObject({
+      name: '',
+      location: '',
+      apartments: '',
+      progress: 0,
+      status: 'Qurilmoqda',
+      image: ''
+    });
+    setIsModalOpen(true);
+  };
 
   const [filterStatus, setFilterStatus] = useState('Barchasi');
 
@@ -138,16 +211,30 @@ export default function ObjectsView() {
     return matchesSearch && matchesFilter;
   });
 
-  const handleAddObject = async (e: React.FormEvent) => {
+  const handleSaveObject = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
-      await addDoc(collection(db, 'objects'), {
+      const objectData = {
         ...newObject,
         apartments: parseInt(newObject.apartments as string) || 0,
         progress: typeof newObject.progress === 'string' ? parseInt(newObject.progress) : (newObject.progress || 0),
-        createdAt: serverTimestamp()
-      });
+        updatedAt: serverTimestamp()
+      };
+
+      if (editingId) {
+        await updateDoc(doc(db, 'objects', editingId), objectData);
+        toast.success("Obyekt muvaffaqiyatli tahrirlandi");
+      } else {
+        await addDoc(collection(db, 'objects'), {
+          ...objectData,
+          createdAt: serverTimestamp()
+        });
+        toast.success("Yangi obyekt muvaffaqiyatli qo'shildi");
+      }
+      
       setIsModalOpen(false);
+      setEditingId(null);
       setNewObject({
         name: '',
         location: '',
@@ -156,9 +243,10 @@ export default function ObjectsView() {
         status: 'Qurilmoqda',
         image: ''
       });
-      toast.success("Yangi obyekt muvaffaqiyatli qo'shildi");
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, 'objects');
+      handleFirestoreError(error, editingId ? OperationType.UPDATE : OperationType.CREATE, editingId ? `objects/${editingId}` : 'objects');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -185,7 +273,7 @@ export default function ObjectsView() {
             </button>
           </div>
           <button 
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleAddClick}
             className="px-6 py-3 gradient-bg text-white rounded-2xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-orange-500/20 hover:scale-[1.02] transition-all"
           >
             <Plus size={18} />
@@ -240,6 +328,7 @@ export default function ObjectsView() {
                   key={obj.id} 
                   {...obj} 
                   onDelete={() => handleDeleteObject(obj.id)}
+                  onEdit={() => handleEditClick(obj)}
                 />
               ))}
             </AnimatePresence>
@@ -287,13 +376,16 @@ export default function ObjectsView() {
                     <td className="px-8 py-6 text-right">
                       <div className="flex justify-end gap-2">
                         <button 
+                          onClick={() => handleEditClick(obj)}
+                          className="p-2 text-slate-300 hover:text-blue-500 transition-colors"
+                        >
+                          <Edit3 size={18} />
+                        </button>
+                        <button 
                           onClick={() => handleDeleteObject(obj.id)}
                           className="p-2 text-slate-300 hover:text-red-500 transition-colors"
                         >
                           <Trash2 size={18} />
-                        </button>
-                        <button className="p-2 text-slate-300 hover:text-slate-900 transition-all">
-                          <MoreVertical size={18} />
                         </button>
                       </div>
                     </td>
@@ -328,7 +420,9 @@ export default function ObjectsView() {
               className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
             >
               <div className="p-8 border-b border-slate-50 flex items-center justify-between">
-                <h3 className="text-2xl font-black text-slate-900 italic">Yangi obyekt qo'shish</h3>
+                <h3 className="text-2xl font-black text-slate-900 italic">
+                  {editingId ? "Obyektni tahrirlash" : "Yangi obyekt qo'shish"}
+                </h3>
                 <button 
                   onClick={() => setIsModalOpen(false)}
                   className="p-2 hover:bg-slate-100 rounded-full transition-colors"
@@ -336,7 +430,7 @@ export default function ObjectsView() {
                   <X size={24} />
                 </button>
               </div>
-              <form onSubmit={handleAddObject} className="p-8 space-y-6">
+              <form onSubmit={handleSaveObject} className="p-8 space-y-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700">Obyekt nomi</label>
                   <input 
@@ -398,10 +492,15 @@ export default function ObjectsView() {
                 
                 <button 
                   type="submit"
-                  className="w-full py-4 gradient-bg text-white rounded-2xl font-bold shadow-lg shadow-orange-500/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                  disabled={isSubmitting}
+                  className="w-full py-4 gradient-bg text-white rounded-2xl font-bold shadow-lg shadow-orange-500/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Plus size={20} />
-                  Obyektni saqlash
+                  {isSubmitting ? (
+                    <Loader2 size={20} className="animate-spin" />
+                  ) : (
+                    <Plus size={20} />
+                  )}
+                  {isSubmitting ? "Saqlanmoqda..." : (editingId ? "Obyektni yangilash" : "Obyektni saqlash")}
                 </button>
               </form>
             </motion.div>

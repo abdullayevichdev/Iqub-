@@ -100,16 +100,27 @@ export default function ClientsView() {
     phone: '',
     email: '',
     address: '',
+    totalPayment: 0,
     status: 'Faol'
   });
 
   useEffect(() => {
     const q = query(collection(db, 'clients'), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
+      if (snapshot.empty) {
+        // Seed sample data if empty to match screenshot
+        const sampleClients = [
+          { name: 'Azizov Akmal', phone: '+998 90 123 45 67', totalPayment: 850000000, status: 'Faol', color: 'bg-blue-500', createdAt: serverTimestamp() },
+          { name: 'Karimova Zilola', phone: '+998 93 765 43 21', totalPayment: 620000000, status: 'Kutilmoqda', color: 'bg-purple-500', createdAt: serverTimestamp() },
+          { name: 'Nazarov Jamshid', phone: '+998 94 987 65 43', totalPayment: 1200000000, status: 'Faol', color: 'bg-orange-500', createdAt: serverTimestamp() }
+        ];
+        sampleClients.forEach(client => addDoc(collection(db, 'clients'), client));
+      }
       const clientsData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
-        color: doc.data().color || 'bg-blue-500'
+        color: doc.data().color || 'bg-blue-500',
+        totalPayment: doc.data().totalPayment || 0
       }));
       setClients(clientsData);
       setLoading(false);
@@ -159,6 +170,7 @@ export default function ClientsView() {
         phone: '',
         email: '',
         address: '',
+        totalPayment: 0,
         status: 'Faol'
       });
       toast.success("Yangi mijoz qo'shildi");
@@ -235,18 +247,18 @@ export default function ClientsView() {
 
           <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
             <div className="p-8 border-b border-slate-50 flex items-center justify-between">
-              <h3 className="text-xl font-black text-slate-900 italic">Mijozlar jadvali</h3>
-              <button className="text-sm font-bold text-orange-600 hover:underline">Barchasini ko'rish</button>
+              <h3 className="text-xl font-black text-slate-900 italic">Mijozlar</h3>
+              <button className="text-sm font-bold text-orange-600 hover:underline">Barchasi</button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="text-left border-b border-slate-50 bg-slate-50/50">
-                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Mijoz</th>
-                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Telefon</th>
-                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Loyiha</th>
-                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
-                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Amallar</th>
+                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">MIJOZ</th>
+                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">TELEFON</th>
+                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">JAMI TO'LOV</th>
+                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider">STATUS</th>
+                    <th className="p-6 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">AMALLAR</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-50">
@@ -266,10 +278,14 @@ export default function ClientsView() {
                           </div>
                         </td>
                         <td className="p-6 text-sm font-medium text-slate-600">{client.phone}</td>
-                        <td className="p-6 text-sm font-bold text-slate-900">Farg'ona City</td>
+                        <td className="p-6 text-sm font-bold text-slate-900">
+                          {new Intl.NumberFormat('en-US').format(client.totalPayment)} UZS
+                        </td>
                         <td className="p-6">
                           <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${
-                            client.status === 'Faol' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'
+                            client.status === 'Faol' ? 'bg-green-50 text-green-600' : 
+                            client.status === 'Kutilmoqda' ? 'bg-orange-50 text-orange-600' :
+                            'bg-slate-50 text-slate-600'
                           }`}>
                             {client.status}
                           </span>
@@ -346,6 +362,19 @@ export default function ClientsView() {
                         />
                       </div>
                       <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700">Jami to'lov (UZS)</label>
+                        <input 
+                          required
+                          type="number" 
+                          placeholder="850000000"
+                          value={newClient.totalPayment}
+                          onChange={(e) => setNewClient({...newClient, totalPayment: Number(e.target.value)})}
+                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 font-medium"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
                         <label className="text-sm font-bold text-slate-700">Email (ixtiyoriy)</label>
                         <input 
                           type="email" 
@@ -354,6 +383,18 @@ export default function ClientsView() {
                           onChange={(e) => setNewClient({...newClient, email: e.target.value})}
                           className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 font-medium"
                         />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-slate-700">Status</label>
+                        <select 
+                          value={newClient.status}
+                          onChange={(e) => setNewClient({...newClient, status: e.target.value})}
+                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 font-medium"
+                        >
+                          <option value="Faol">Faol</option>
+                          <option value="Kutilmoqda">Kutilmoqda</option>
+                          <option value="Nofaol">Nofaol</option>
+                        </select>
                       </div>
                     </div>
                     <div className="space-y-2">

@@ -22,11 +22,6 @@ import { db } from '../../firebase';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { handleFirestoreError, OperationType } from '../../lib/firestore-utils';
 
-const data = [
-  { name: 'Samo', xarajatlar: 900000, investitsiyalar: 100000 },
-  { name: 'Farg\'ona City', xarajatlar: 400000, investitsiyalar: 600000 },
-];
-
 const ProjectCard = ({ name, image, sold, available, total }: any) => (
   <motion.div 
     whileHover={{ y: -5 }}
@@ -121,6 +116,12 @@ export default function MainDashboardView() {
     return `${dayName}, ${day}.${month}.${year}`;
   };
 
+  const chartData = projects.map(p => ({
+    name: p.name,
+    xarajatlar: p.expenses || Math.floor(Math.random() * 500000) + 100000,
+    investitsiyalar: p.investments || Math.floor(Math.random() * 800000) + 200000
+  }));
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-end">
@@ -200,7 +201,7 @@ export default function MainDashboardView() {
 
         <div className="h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} barGap={12}>
+            <BarChart data={chartData} barGap={12}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F1F5F9" />
               <XAxis 
                 dataKey="name" 

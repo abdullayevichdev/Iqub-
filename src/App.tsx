@@ -50,6 +50,14 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleAdminLogin = () => {
+    setView('dashboard');
+    setIsLoginOpen(false);
+    localStorage.setItem('app_view', 'dashboard');
+    localStorage.setItem('admin_access', 'true');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('app_view');
     localStorage.removeItem('demo_approved');
@@ -64,6 +72,11 @@ export default function App() {
 
   const handleViewChange = (newView: 'landing' | 'dashboard' | 'demo') => {
     if (isDemoPending) return; // Prevent view change if pending
+    
+    // Access checks
+    if (newView === 'dashboard' && localStorage.getItem('admin_access') !== 'true') return;
+    if (newView === 'demo' && localStorage.getItem('demo_approved') !== 'true') return;
+    
     setView(newView);
     localStorage.setItem('app_view', newView);
   };
@@ -84,6 +97,8 @@ export default function App() {
             onViewChange={handleViewChange} 
             currentView={view} 
             onLoginClick={() => setIsLoginOpen(true)}
+            isAdmin={localStorage.getItem('admin_access') === 'true'}
+            isDemoApproved={localStorage.getItem('demo_approved') === 'true'}
           />
         )}
         
@@ -139,7 +154,7 @@ export default function App() {
         <LoginModal 
           isOpen={isLoginOpen} 
           onClose={() => setIsLoginOpen(false)} 
-          onDemoSuccess={handleDemoSuccess}
+          onAdminLogin={handleAdminLogin}
         />
         <Toaster position="top-center" richColors />
       </div>
